@@ -21,7 +21,7 @@ def process_stats():
 
 def top(interactMode):
     """Function to compile all diagnostic information into a organized display."""
-
+    upper_diagnostics()
     pass
 
 
@@ -34,7 +34,7 @@ def main(
 ):
     if nonInteract is not None:
         # if they want to run it more than once:
-        top(nonInteract)
+        schedule.every(1).seconds.do(top(nonInteract))
     else:
         # run normally through schedule
         top(nonInteract)
