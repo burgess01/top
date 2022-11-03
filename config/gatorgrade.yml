@@ -1,0 +1,40 @@
+setup: |
+  echo "installed all dependencies."
+---
+
+# check the top file
+- src/top.py:
+    - description: Use the scheduler library
+      check: MatchFileFragment
+      options:
+        fragment: import scheduler
+        count: 1
+        exact: true
+    - description: Use the psutil library
+      check: MatchFileFragment
+      options:
+        fragment: import psutil
+        count: 1
+        exact: true
+    - description: Create sufficient single-line comments
+      check: CountSingleLineComments
+      options:
+        language: "Python"
+        count: 25
+        exact: false
+    - description: Ensure the top function exists
+      check: MatchFileFragment
+      options:
+        fragment: top()
+        count: 1
+        exact: false
+    - description: Ensure the process_stats function exists
+    check: MatchFileFragment
+      options:
+        fragment: process_stats()
+        count: 1
+        exact: false
+
+# run the program using a single run
+- description: Run top for one iteration and ensure it does not crash.
+  command: python src/top.py --non-interactive
