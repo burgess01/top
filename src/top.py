@@ -1,10 +1,12 @@
 """ Program in order to create a 'top' command implemented in Python. """
 
+# needed imports
 import schedule
 import psutil
 from datetime import datetime
 import pandas as pd
 import os
+import typer
 
 
 def upper_diagnostics():
@@ -22,7 +24,7 @@ def top():
     pass
 
 
-def main():
+def main(interact: bool):
     pass
 
 
