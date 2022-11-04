@@ -4,9 +4,14 @@
 import schedule
 import psutil
 from datetime import datetime
-import pandas as pd
+from datetime import timedelta
+import time
 import os
 import typer
+import sys
+
+# create objects
+now = datetime.now()
 
 
 def upper_diagnostics():
