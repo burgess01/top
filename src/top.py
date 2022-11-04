@@ -126,7 +126,7 @@ def top():
 
     # lower section print
     print("PID         COMMAND        CPU%           TIME             STATUS")
-    for i in range(15):
+    for i in range(12):
         proc = processes[i]
         print("{: <10} {: <15} {: <10} {: <20} {: <20}".format(*proc))
 
