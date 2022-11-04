@@ -11,7 +11,41 @@ import typer
 
 def upper_diagnostics():
     """Function to calculate all 'upper' diagnostics."""
-    pass
+    # maybe make a class/enumeration?
+    # processes
+    processes = list(psutil.process_iter())
+
+    # load average
+    load_averages = psutil.getloadavg()
+
+    # cpu usage
+    cpu_usage = psutil.cpu_times()
+    overall_usage = cpu_usage[0] + cpu_usage[2] + cpu_usage[3]
+
+    # shared libs
+
+    # mem regions
+
+    # physical memory
+
+    # VM
+    vm = psutil.virtual_memory()
+
+    # Networks
+    network_info = psutil.net_io_counters()
+
+    # Disks
+    disk_info = psutil.disk_io_counters()
+
+    return (
+        processes,
+        load_averages,
+        cpu_usage,
+        overall_usage,
+        vm,
+        network_info,
+        disk_info,
+    )
 
 
 def process_stats():
