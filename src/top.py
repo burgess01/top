@@ -55,10 +55,41 @@ def upper_diagnostics():
 
 def process_stats():
     """Function to calculate order of processes in top command."""
-    pass
+    # for all processes, get: (list of lists)
+    processes = []
+
+    for process in psutil.process_iter():
+        # PID
+        id = process.pid
+        # process name
+        name = process.name()
+        # CPU percent
+        proc = psutil.Process(id)
+        # status
+        status = process.status()
+
+        try:
+            memoryUse = proc.memory_info()[0] / 2.0**30
+        except:
+            memoryUse = 0
+
+        # time created
+        seconds = process.create_time()
+        start = datetime.fromtimestamp(seconds)
+        current = datetime.now()
+        difference = current - start
+
+        formatted_time = str(difference).split(".")[0]
+
+        processes.append(
+            [id, name[:12], round((memoryUse * 100), 1), formatted_time, status]
+        )
+    processes.sort(key=lambda processes: processes[2], reverse=True)
+
+    return processes
 
 
-def top(interactMode):
+def top():
     """Function to compile all diagnostic information into a organized display."""
     upper_diagnostics()
     pass
