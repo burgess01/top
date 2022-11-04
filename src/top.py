@@ -7,7 +7,6 @@ from datetime import datetime
 from datetime import timedelta
 import time
 import os
-import typer
 import sys
 
 # create objects
