@@ -132,20 +132,20 @@ def top():
         print("{: <10} {: <15} {: <10} {: <20} {: <20}".format(*proc))
 
 
+def main():
 
-def main(
-    nonInteract: bool = typer.Option(
-        None,
-        "--non-interactive",
-        help="if you want the program to run only one time or iteratively.",
-    )
-):
-    if nonInteract is not None:
-        # if they want to run it more than once:
-        schedule.every(1).seconds.do(top(nonInteract))
+    if len(sys.argv) == 1:
+        try:
+            # if they want to run it iteratively
+            schedule.every(1).seconds.do(top)
+            while True:
+                schedule.run_pending()
+                time.sleep(1)
+        except KeyboardInterrupt:
+            sys.exit(0)
     else:
-        # run normally through schedule
-        top(nonInteract)
+        # run once through a single top call
+        top()
 
 
 if __name__ == "__main__":
