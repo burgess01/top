@@ -5,6 +5,7 @@ import schedule
 import psutil
 from datetime import datetime
 from datetime import timedelta
+from hurry.filesize import size
 import time
 import os
 import sys
@@ -31,9 +32,11 @@ def upper_diagnostics():
     # mem regions
 
     # physical memory
+    vm = psutil.virtual_memory()
 
     # VM
-    vm = psutil.virtual_memory()
+    totalvm = psutil.virtual_memory().total
+    swap = psutil.swap_memory()
 
     # Networks
     network_info = psutil.net_io_counters()
@@ -47,6 +50,8 @@ def upper_diagnostics():
         cpu_usage,
         overall_usage,
         vm,
+        totalvm,
+        swap,
         network_info,
         disk_info,
     )
@@ -56,6 +61,8 @@ def process_stats():
     """Function to calculate order of processes in top command."""
     # for all processes, get: (list of lists)
     processes = []
+    sleeping = 0
+    running = 0
 
     for process in psutil.process_iter():
         # PID
@@ -72,6 +79,13 @@ def process_stats():
         except:
             memoryUse = 0
 
+        if process.status() == psutil.STATUS_SLEEPING:
+            sleeping += 1
+        elif process.status() == psutil.STATUS_RUNNING:
+            running += 1
+
+        # sum up memory usage and divide for CPU %
+
         # time created
         seconds = process.create_time()
         start = datetime.fromtimestamp(seconds)
@@ -85,7 +99,7 @@ def process_stats():
         )
     processes.sort(key=lambda processes: processes[2], reverse=True)
 
-    return processes
+    return processes, sleeping, running
 
 
 def top():
@@ -96,16 +110,18 @@ def top():
         cpu_usage,
         overall_usage,
         vm,
+        totalvm,
+        swap,
         network_info,
         disk_info,
     ) = upper_diagnostics()
 
-    processes = process_stats()
+    processes, sleeping, running = process_stats()
     newnow = datetime.now()
     # add user - readable version, change bit values to GB values
     # exec call , sys package, shell = True; look into textual for better option
     print(
-        f"Processes: {len(processes)} total, _ running, _ sleeping, _ threads",
+        f"Processes: {len(processes)} total, {running} running, {sleeping} sleeping, _ threads",
         "{:>25}".format(newnow.strftime("%H:%M:%S")),
     )
     print(
@@ -113,20 +129,18 @@ def top():
     )
     print(f"SharedLibs: _ resident, _ data, _ linkedit.")
     print(f"MemRegions: _ total, _ resident, _ private, _ shared.")
-    print(f"PhysMem: _ used (_ wired), _ unused.")
+    print(f"PhysMem: {size(vm[0])} used, {size(vm[7])} wired, {vm[5]} inactive.")
+    print(f"VM: {totalvm} vsize, {swap[4]}(0) swapins, {swap[5]}(0) swapouts")
     print(
-        f"VM: {vm[0]} vsize, {vm[7]} wired, {vm[2]} available, {vm[4]} active, {vm[5]} inactive."
+        f"Networks: packets: {network_info[3]}/{size(network_info[3])} in, {network_info[2]}/{size(network_info[2])} out."
     )
     print(
-        f"Networks: packets: {network_info[3]}/{network_info[3] / (1024.0 ** 3)}G in, {network_info[2]}/{network_info[2] / (1024.0 ** 3)}G out."
-    )
-    print(
-        f"Disks: {disk_info[0]}/{disk_info[0] >> 20}G read, {disk_info[1]}/{disk_info[1] >> 20}G written"
+        f"Disks: {disk_info[0]}/{size(disk_info[0])}G read, {disk_info[1]}/{size(disk_info[1])} written"
     )
 
     # lower section print
     print("PID         COMMAND        CPU%           TIME             STATUS")
-    for i in range(12):
+    for i in range(14):
         proc = processes[i]
         print("{: <10} {: <15} {: <10} {: <20} {: <20}".format(*proc))
 
