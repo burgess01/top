@@ -122,7 +122,7 @@ def top():
     # exec call , sys package, shell = True; look into textual for better option
     print(
         f"Processes: {len(processes)} total, {running} running, {sleeping} sleeping, _ threads",
-        "{:>25}".format(newnow.strftime("%H:%M:%S")),
+        "{:>23}".format(newnow.strftime("%H:%M:%S")),
     )
     print(
         f"Load Avg: {round(load_averages[0], 2)}, {round(load_averages[1], 2)}, {round(load_averages[2], 2)}  CPU usage: {round((cpu_usage[0]/overall_usage) * 100, 2)}% user, {round((cpu_usage[2]/overall_usage) * 100,2)}% sys, {round((cpu_usage[3]/overall_usage) * 100,2)}% idle"
