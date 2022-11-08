@@ -49,6 +49,7 @@ def upper_diagnostics():
     # Disks
     disk_info = psutil.disk_io_counters()
 
+    # return all of the metrics calculated in this function
     return (
         processes,
         load_averages,
@@ -68,19 +69,23 @@ def upper_diagnostics():
 
 def process_stats():
     """Function to calculate order of processes in top command."""
-    # for all processes, get: (list of lists)
+    # create process list and initializations of needed func variables
     processes = []
     sleeping = 0
     running = 0
     threads = 0
     overallCPUPerc = 0
 
+    # calculate the overall CPU percentage
+    # over all processes psutil can grab
     for process in psutil.process_iter():
         try:
             overallCPUPerc += psutil.Process(process.pid).memory_info()[0] / 2.0**30
         except:
             overallCPUPerc += 0
 
+    # calculate various statistics over every process
+    # psutil can grab
     for process in psutil.process_iter():
         # PID
         id = process.pid
@@ -91,19 +96,24 @@ def process_stats():
         # status
         status = process.status()
 
+        # get username that process is from
         user = process.username()
 
         try:
+            # try to calculate the memory usage
             memoryUse = proc.memory_info()[0] / 2.0**30
         except:
             memoryUse = 0
 
         if process.status() == "sleeping":
+            # count process if it is sleeping
             sleeping += 1
         elif process.status() == "running":
+            # count process if it is running
             running += 1
 
         try:
+            # count all threads from the process if able
             threads += process.num_threads()
         except:
             threads += 0
@@ -111,28 +121,38 @@ def process_stats():
         # sum up memory usage and divide for CPU %
         cpuPerc = (memoryUse / overallCPUPerc) * 100
 
-        # time created
+        # calculate the time that the process begin running
         seconds = process.create_time()
         start = datetime.fromtimestamp(seconds)
+
+        # get the current time
         current = datetime.now()
+
+        # calculate the difference between the process
+        # start time and the current time
         difference = current - start
 
+        # change the time difference into a usable format
         seconds = int(difference.total_seconds())
         minutes, seconds = divmod(seconds, 60)
         hours, minutes = divmod(minutes, 60)
-
+        # concatenate together the calculated difference
         formatted_time = str(hours) + ":" + str(minutes) + ":" + str(seconds)
 
+        # create a list in the list containing the calculated process info
         processes.append(
             [id, name[:12], round(cpuPerc, 2), formatted_time, user, status]
         )
+    # order the list in descending order of cpu percentage
     processes.sort(key=lambda processes: processes[2], reverse=True)
 
+    # return calculated metrics
     return processes, sleeping, running, threads
 
 
 def top():
     """Function to compile all diagnostic information into a organized display."""
+    # call needed function metrics
     (
         processes,
         load_averages,
@@ -150,9 +170,10 @@ def top():
     ) = upper_diagnostics()
 
     processes, sleeping, running, threads = process_stats()
+
+    # create now variable for accurate timekeeping
     newnow = datetime.now()
-    # add user - readable version, change bit values to GB values
-    # exec call , sys package, shell = True; look into textual for better option
+
     print(
         f"Processes: {len(processes)} total, {running} running, {sleeping} sleeping, {threads} threads",
         "{:>20}".format(newnow.strftime("%H:%M:%S")),
