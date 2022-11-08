@@ -217,6 +217,7 @@ def main():
             # run for the amount of times entered
             for i in range(iterations):
                 top()
+                time.sleep(1)
         except:
             print(
                 "Please enter an integer value for the amount of times you want the program to run."
