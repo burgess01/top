@@ -4,10 +4,10 @@ setup: |
 
 # check the top file
 - src/top.py:
-    - description: Use the scheduler library
+    - description: Use the schedule library
       check: MatchFileFragment
       options:
-        fragment: import scheduler
+        fragment: import schedule
         count: 1
         exact: true
     - description: Use the psutil library
@@ -29,7 +29,7 @@ setup: |
         count: 1
         exact: false
     - description: Ensure the process_stats function exists
-    check: MatchFileFragment
+      check: MatchFileFragment
       options:
         fragment: process_stats()
         count: 1
