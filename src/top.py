@@ -27,9 +27,13 @@ def upper_diagnostics():
     cpu_usage = psutil.cpu_times()
     overall_usage = cpu_usage[0] + cpu_usage[2] + cpu_usage[3]
 
-    # shared libs
+    # cannot get shared libs due to Mac, showing other stats instead
+    cpu_count = psutil.cpu_count()
+    phys_cpus = psutil.cpu_count(logical=False)
 
-    # mem regions
+    # Cannot get memory regions due to having a Mac, showing other stats instead
+    numUsers = len(psutil.users())
+    bootTime = datetime.fromtimestamp(psutil.boot_time()).strftime("%Y-%m-%d %H:%M:%S")
 
     # physical memory
     vm = psutil.virtual_memory()
