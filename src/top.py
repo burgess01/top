@@ -71,6 +71,14 @@ def process_stats():
     processes = []
     sleeping = 0
     running = 0
+    threads = 0
+    overallCPUPerc = 0
+
+    for process in psutil.process_iter():
+        try:
+            overallCPUPerc += psutil.Process(process.pid).memory_info()[0] / 2.0**30
+        except:
+            overallCPUPerc += 0
 
     for process in psutil.process_iter():
         # PID
@@ -82,17 +90,25 @@ def process_stats():
         # status
         status = process.status()
 
+        user = process.username()
+
         try:
             memoryUse = proc.memory_info()[0] / 2.0**30
         except:
             memoryUse = 0
 
-        if process.status() == psutil.STATUS_SLEEPING:
+        if process.status() == "sleeping":
             sleeping += 1
-        elif process.status() == psutil.STATUS_RUNNING:
+        elif process.status() == "running":
             running += 1
 
+        try:
+            threads += process.num_threads()
+        except:
+            threads += 0
+
         # sum up memory usage and divide for CPU %
+        cpuPerc = (memoryUse / overallCPUPerc) * 100
 
         # time created
         seconds = process.create_time()
@@ -100,14 +116,18 @@ def process_stats():
         current = datetime.now()
         difference = current - start
 
-        formatted_time = str(difference).split(".")[0]
+        seconds = int(difference.total_seconds())
+        minutes, seconds = divmod(seconds, 60)
+        hours, minutes = divmod(minutes, 60)
+
+        formatted_time = str(hours) + ":" + str(minutes) + ":" + str(seconds)
 
         processes.append(
-            [id, name[:12], round((memoryUse * 100), 1), formatted_time, status]
+            [id, name[:12], round(cpuPerc, 2), formatted_time, user, status]
         )
     processes.sort(key=lambda processes: processes[2], reverse=True)
 
-    return processes, sleeping, running
+    return processes, sleeping, running, threads
 
 
 def top():
