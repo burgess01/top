@@ -212,8 +212,15 @@ def main():
         except KeyboardInterrupt:
             sys.exit(0)
     else:
-        # run once through a single top call
-        top()
+        try:
+            iterations = int(sys.argv[1])
+            # run for the amount of times entered
+            for i in range(iterations):
+                top()
+        except:
+            print(
+                "Please enter an integer value for the amount of times you want the program to run."
+            )
 
 
 if __name__ == "__main__":
