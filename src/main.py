@@ -2,13 +2,7 @@
 
 # needed imports
 import schedule
-import psutil
-from datetime import date
-from datetime import datetime
-from datetime import timedelta
-from hurry.filesize import size
 import time
-import os
 import sys
 import platform
 
