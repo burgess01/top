@@ -1,5 +1,8 @@
 # top
 
+[![Language: Python](https://img.shields.io/badge/Language-Python-blue.svg)](https://www.python.org/)
+[![Commits: Conventional](https://img.shields.io/badge/Commits-Conventional-blue.svg)](https://www.conventionalcommits.org/en/v1.0.0/)
+
 A MacOS Python implementation of 'top' command using Psutil.
 
 ## What top Does
