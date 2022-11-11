@@ -22,7 +22,8 @@ def upper_diagnostics():
     overall_usage = cpu_usage[0] + cpu_usage[2] + cpu_usage[3]
 
     # memory regions
-    mem_regions = psutil.memory_maps()
+    p = psutil.Process()
+    mem_regions = p.memory_maps()
 
     # VM
     vm = psutil.virtual_memory()
