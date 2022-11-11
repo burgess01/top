@@ -3,11 +3,11 @@
 [![Language: Python](https://img.shields.io/badge/Language-Python-blue.svg)](https://www.python.org/)
 [![Commits: Conventional](https://img.shields.io/badge/Commits-Conventional-blue.svg)](https://www.conventionalcommits.org/en/v1.0.0/)
 
-A MacOS Python implementation of 'top' command using Psutil.
+A Cross-Platform Python implementation of 'top' command using Psutil.
 
 ## What top Does
 
-Top is able to get most of the top information with the restrictions that come with running it at the program level, as well as the MacOS interface.
+Top is able to get most of the top information with the restrictions that come with running it at the program level. Different statistics are shown based on the operating system that this project is run on. top work on MacOS, Linux, and Windows operating systems.
 
 ## How to Get Started With top
 
