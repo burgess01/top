@@ -23,7 +23,10 @@ def upper_diagnostics():
 
     # memory regions: * only rss available on windows
     p = psutil.Process()
-    mem_regions = p.memory_maps()
+    mem = p.memory_maps()
+    mem_regions = 0
+    for i in range(len(mem)):
+        mem_regions += mem[1]
 
     # VM ** only total and available on windows
     vm = psutil.virtual_memory()
