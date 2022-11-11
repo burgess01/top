@@ -7,7 +7,7 @@ A Cross-Platform Python implementation of 'top' command using Psutil.
 
 ## What top Does
 
-Top is able to get most of the top information with the restrictions that come with running it at the program level. Different statistics are shown based on the operating system that this project is run on. top work on MacOS, Linux, and Windows operating systems.
+Top is able to get most of the top information with the restrictions that come with running it at the program level. Different statistics are shown based on the operating system that this project is run on. top works on MacOS, Linux, and Windows operating systems.
 
 ## How to Get Started With top
 
