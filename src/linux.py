@@ -29,6 +29,7 @@ def upper_diagnostics():
     rss_mem_regions = 0
     private_mem_regions = 0
 
+    # iterate through all memory_map enteries and grab wanted values
     for i in range(len(mem)):
         total_mem_regions += mem[i][1]
         rss_mem_regions += mem[i][2]
