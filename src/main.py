@@ -27,16 +27,12 @@ def main():
             except KeyboardInterrupt:
                 sys.exit(0)
         else:
-            try:
-                iterations = int(sys.argv[1])
-                # run for the amount of times entered
-                for i in range(iterations):
-                    mac.top()
-                    time.sleep(1)
-            except:
-                print(
-                    "Please enter an integer value for the amount of times you want the program to run."
-                )
+            iterations = int(sys.argv[1])
+            # run for the amount of times entered
+            for i in range(iterations):
+                mac.top()
+                time.sleep(1)
+
     elif operatingSys == "Windows":
         if len(sys.argv) == 1:
             try:
@@ -48,16 +44,12 @@ def main():
             except KeyboardInterrupt:
                 sys.exit(0)
         else:
-            try:
-                iterations = int(sys.argv[1])
-                # run for the amount of times entered
-                for i in range(iterations):
-                    windows.top()
-                    time.sleep(1)
-            except:
-                print(
-                    "Please enter an integer value for the amount of times you want the program to run."
-                )
+            iterations = int(sys.argv[1])
+            # run for the amount of times entered
+            for i in range(iterations):
+                windows.top()
+                time.sleep(1)
+
     elif operatingSys == "Linux":
         if len(sys.argv) == 1:
             try:
@@ -69,16 +61,11 @@ def main():
             except KeyboardInterrupt:
                 sys.exit(0)
         else:
-            try:
-                iterations = int(sys.argv[1])
-                # run for the amount of times entered
-                for i in range(iterations):
-                    linux.top()
-                    time.sleep(1)
-            except:
-                print(
-                    "Please enter an integer value for the amount of times you want the program to run."
-                )
+            iterations = int(sys.argv[1])
+            # run for the amount of times entered
+            for i in range(iterations):
+                linux.top()
+                time.sleep(1)
 
 
 if __name__ == "__main__":
