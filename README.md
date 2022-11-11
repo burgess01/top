@@ -15,6 +15,6 @@ You can get started with top by cloning the repository and running the command `
 
 ## Running GatorGrade Checks
 
-This repository is able to be automatically assesed using GatorGrade. These checks can be run from the repository's base directory by running the command ```gatorgrade --config config/gatorgrade.yml``` in the base directory if you have gatorgrade installed. If you do not have GatorGrade installed yet on your local machine, you can install it by using the command ```pip install gatorgrade```.
+This repository is able to be automatically assessed using GatorGrade. These checks can be run from the repository's base directory by running the command ```gatorgrade --config config/gatorgrade.yml``` in the base directory if you have GatorGrade installed. If you do not have GatorGrade installed yet on your local machine, you can install it by using the command ```pip install gatorgrade```.
 
-These checks ensure that files are formatted correctly with proficient levels of polish and also run without crashing. They are very useful both during and after development.
+These checks ensure that files are formatted correctly with proficient levels of polish and also run without crashing. GatorGrade checks are  useful both during and after development.
