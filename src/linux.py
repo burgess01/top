@@ -23,7 +23,16 @@ def upper_diagnostics():
 
     # memory regions
     p = psutil.Process()
-    mem_regions = p.memory_maps()
+    mem = p.memory_maps()
+
+    total_mem_regions = 0
+    rss_mem_regions = 0
+    private_mem_regions = 0
+
+    for i in range(len(mem)):
+        total_mem_regions += mem[1]
+        rss_mem_regions += mem[2]
+        private_mem_regions += mem[3]
 
     # VM
     vm = psutil.virtual_memory()
@@ -42,7 +51,9 @@ def upper_diagnostics():
         load_avg,
         cpu_usage,
         overall_usage,
-        mem_regions,
+        total_mem_regions,
+        rss_mem_regions,
+        private_mem_regions,
         vm,
         swap,
         network_info,
@@ -147,7 +158,9 @@ def top():
         load_avg,
         cpu_usage,
         overall_usage,
-        mem_regions,
+        total_mem_regions,
+        rss_mem_regions,
+        private_mem_regions,
         vm,
         swap,
         network_info,
@@ -164,7 +177,7 @@ def top():
         f"Load Avg: {round(load_avg[0], 2)}, {round(load_avg[1], 2)}, {round(load_avg[2], 2)}  CPU usage: {round((cpu_usage[0]/overall_usage) * 100, 2)}% user, {round((cpu_usage[2]/overall_usage) * 100,2)}% sys, {round((cpu_usage[3]/overall_usage) * 100,2)}% idle"
     )
     print(
-        f"MemRegions: {mem_regions[2]} total, {mem_regions[1]} resident, {mem_regions[3]} private"
+        f"MemRegions: {total_mem_regions} total, {rss_mem_regions} resident, {private_mem_regions} private"
     )
     print(f"PhysMem: {size(vm[0])} total, {size(vm[1])} available")
     print(f"VM: {size(vm[0])} vsize, {swap[4]}(0) swapins, {swap[5]}(0) swapouts")
