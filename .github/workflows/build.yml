@@ -1,0 +1,48 @@
+name: build
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ macos-latest, windows-latest, ubuntu-latest ]
+        python-version: ["3.10"]
+        
+    steps:
+      - name: Check out Repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Setup Python ${{ matrix.python-version }}
+          if: always()
+          uses: actions/setup-python@v1
+          with:
+            python-version: ${{ matrix.python-version }}
+      - name: Install Pip
+          if: always()
+          run: |
+              pip install -U pip
+      - name: Install Repository Dependencies
+          if: always()
+          run:  |
+              pip install schedule
+              pip install psutil
+              pip install datetime
+              pip install hurry.filesize
+      - name: Run GatorGrader with GatorGrade
+          if: always()
+          run:  |
+              pip install gatorgrade
+              gatorgrade --config config/gatorgrade.yml
+      - name: Run top
+          if: always()
+          run:  |
+              cd src
+              python main.py 1
