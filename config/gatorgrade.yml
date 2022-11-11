@@ -10,6 +10,12 @@ setup: |
         fragment: import schedule
         count: 1
         exact: true
+    - description: Check the os using platform.system()
+      check: MatchFileFragment
+      options:
+        fragment: platform.system()
+        count: 1
+        exact: false
 
 # check the mac file
 - src/mac.py:
