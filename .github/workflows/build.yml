@@ -29,20 +29,21 @@ jobs:
         if: always()
         run: |
             pip install -U pip
-      - name: Install Repository Dependencies
+      - name: Install Dependencies and Run GatorGrader with GatorGrade
         if: always()
         run:  |
             pip install schedule
             pip install psutil
             pip install datetime
             pip install hurry.filesize
-      - name: Run GatorGrader with GatorGrade
-        if: always()
-        run:  |
             pip install gatorgrade
             gatorgrade --config config/gatorgrade.yml
-      - name: Run top
+      - name: Install Dependencies and Run top
         if: always()
         run:  |
+            pip install schedule
+            pip install psutil
+            pip install datetime
+            pip install hurry.filesize
             cd src
             python main.py 1
