@@ -26,7 +26,7 @@ def upper_diagnostics():
     mem = p.memory_maps()
     mem_regions = 0
     for i in range(len(mem)):
-        mem_regions += mem[1]
+        mem_regions += mem[i][1]
 
     # VM ** only total and available on windows
     vm = psutil.virtual_memory()

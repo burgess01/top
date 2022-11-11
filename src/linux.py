@@ -30,9 +30,9 @@ def upper_diagnostics():
     private_mem_regions = 0
 
     for i in range(len(mem)):
-        total_mem_regions += mem[1]
-        rss_mem_regions += mem[2]
-        private_mem_regions += mem[3]
+        total_mem_regions += mem[i][1]
+        rss_mem_regions += mem[i][2]
+        private_mem_regions += mem[i][3]
 
     # VM
     vm = psutil.virtual_memory()
