@@ -10,8 +10,63 @@ setup: |
         fragment: import schedule
         count: 1
         exact: true
+
 # check the mac file
 - src/mac.py:
+    - description: Use the psutil library
+      check: MatchFileFragment
+      options:
+        fragment: import psutil
+        count: 1
+        exact: true
+    - description: Create sufficient single-line comments
+      check: CountSingleLineComments
+      options:
+        language: "Python"
+        count: 25
+        exact: false
+    - description: Ensure the top function exists
+      check: MatchFileFragment
+      options:
+        fragment: top()
+        count: 1
+        exact: false
+    - description: Ensure the process_stats function exists
+      check: MatchFileFragment
+      options:
+        fragment: process_stats()
+        count: 1
+        exact: false
+
+# check the windows file
+- src/windows.py:
+    - description: Use the psutil library
+      check: MatchFileFragment
+      options:
+        fragment: import psutil
+        count: 1
+        exact: true
+    - description: Create sufficient single-line comments
+      check: CountSingleLineComments
+      options:
+        language: "Python"
+        count: 25
+        exact: false
+    - description: Ensure the top function exists
+      check: MatchFileFragment
+      options:
+        fragment: top()
+        count: 1
+        exact: false
+    - description: Ensure the process_stats function exists
+      check: MatchFileFragment
+      options:
+        fragment: process_stats()
+        count: 1
+        exact: false
+
+# check the linux file
+- src/linux.py:
     - description: Use the psutil library
       check: MatchFileFragment
       options:
