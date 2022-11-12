@@ -1,4 +1,5 @@
 setup: |
+  echo "TODO: Set Up Dependencies"
   echo "installed all dependencies."
 ---
 
