@@ -20,13 +20,16 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - name: Run Markdown Linting
+        if: matrix.os == 'ubuntu-latest'
+        uses: actionshub/markdownlint@main
       - name: Setup Python ${{ matrix.python-version }}
         if: always()
         uses: actions/setup-python@v1
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install Dependencies and Run GatorGrader with GatorGrade
-        if: always()
+        if: matrix.os == 'ubuntu-latest'
         run:  |
             pip install schedule
             pip install psutil
