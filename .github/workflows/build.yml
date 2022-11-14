@@ -40,8 +40,7 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run:  |
             gatorgrade --config config/gatorgrade.yml
-      - name: Install Dependencies and Run top
+      - name: Run top
         if: always()
         run:  |
-            cd src
-            python main.py 1
+            python src/main.py 1
