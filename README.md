@@ -1,5 +1,6 @@
 # top
 
+[![build](../../actions/workflows/build.yml/badge.svg)](../../actions/)
 [![Language: Python](https://img.shields.io/badge/Language-Python-blue.svg)](https://www.python.org/)
 [![Commits: Conventional](https://img.shields.io/badge/Commits-Conventional-blue.svg)](https://www.conventionalcommits.org/en/v1.0.0/)
 
