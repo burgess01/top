@@ -7,9 +7,9 @@ import sys
 import platform
 
 # needed cross platform files
-from ostop import mac
-from ostop import windows
-from ostop import linux
+import mac
+import windows
+import linux
 
 
 def main():
