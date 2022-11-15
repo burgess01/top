@@ -2,8 +2,8 @@ from setuptools import setup, find_packages
 
 
 setup(
-    name="pytop",
-    version="1.0",
+    name="ostop",
+    version="1.3",
     license="MIT",
     author="Katherine Burgess",
     author_email="20burgessk@gmail.com",
@@ -16,8 +16,5 @@ setup(
         "psutil",
         "datetime",
         "hurry.filesize",
-        "time",
-        "sys",
-        "platform",
     ],
 )

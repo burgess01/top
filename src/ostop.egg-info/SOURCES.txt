@@ -1,0 +1,9 @@
+LICENSE
+README.md
+setup.cfg
+setup.py
+src/ostop.egg-info/PKG-INFO
+src/ostop.egg-info/SOURCES.txt
+src/ostop.egg-info/dependency_links.txt
+src/ostop.egg-info/requires.txt
+src/ostop.egg-info/top_level.txt
