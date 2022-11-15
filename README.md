@@ -8,15 +8,14 @@ A Cross-Platform Python implementation of 'top' command using Psutil.
 
 ## What top Does
 
-Top is able to get most of the top information with the
-restrictions that come with running it at the program level.
-Different statistics are shown based on
-the operating system that this project is run on.
-top works on MacOS, Linux, and Windows operating systems.
+Top is able to get most of the top information with the restrictions that
+come with running it at the program level. Different statistics are shown
+based on the operating system that this project is run on. top works on
+MacOS, Linux, and Windows operating systems.
 
 ## How to Get Started With top
 
-### PIPY Installation
+### PYPI Installation
 
 You can install top through running this command in your terminal:
 
@@ -36,7 +35,6 @@ use a Keyboard Interrupt.
 The command with an integer value will make the program run
 for the number of iterations/seconds you specify.
 
-
 ### Local Installation
 
 You can get started with top by cloning the repository and running this command:
@@ -44,21 +42,21 @@ You can get started with top by cloning the repository and running this command:
 ``` python src/top.py ```
 
 in the base directory. Like the top command, this will run forever.
-You can exit out of the program by entering a keyboardinterrupt or exiting
-your terminal altogether.You can also specify the amount of times you want
-the program to run by giving a second integer input. For example, you can
-run the program for one iteration by writing this command:
+You can exit out of the program by entering a Keyboard Interrupt or exiting
+your terminal altogether. You can also specify the amount of times you want
+the program to run by giving an integer input. For example, you can run the
+program for one iteration by writing this command:
 
 ``` python src/top.py 1 ```
 
 ## Running GatorGrade Checks
 
 This repository is able to be automatically assessed using GatorGrade.
-These checks can be run from the repository's base directory by running this command:
+These checks can be run from the repository's base directory by running this command
+in the base directory if you already have GatorGrade installed:
 
 ```gatorgrade --config config/gatorgrade.yml```
 
-in the base directory if you have GatorGrade installed.
 If you do not have GatorGrade installed yet on your local machine, you can install
 it by using this command:
 
