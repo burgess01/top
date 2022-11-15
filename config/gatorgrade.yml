@@ -4,7 +4,7 @@ setup: |
 ---
 
 # check the main file
-- src/main.py:
+- ostop/main.py:
     - description: Use the schedule library
       check: MatchFileFragment
       options:
@@ -19,7 +19,7 @@ setup: |
         exact: false
 
 # check the mac file
-- src/mac.py:
+- ostop/mac.py:
     - description: Use the psutil library
       check: MatchFileFragment
       options:
@@ -46,7 +46,7 @@ setup: |
         exact: false
 
 # check the windows file
-- src/windows.py:
+- ostop/windows.py:
     - description: Use the psutil library
       check: MatchFileFragment
       options:
@@ -73,7 +73,7 @@ setup: |
         exact: false
 
 # check the linux file
-- src/linux.py:
+- ostop/linux.py:
     - description: Use the psutil library
       check: MatchFileFragment
       options:
@@ -101,4 +101,4 @@ setup: |
 
 # run the program using a single run
 - description: Run top for one iteration and ensure it does not crash.
-  command: python src/main.py 1
+  command: python ostop/main.py 1
