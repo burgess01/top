@@ -9,95 +9,89 @@ from hurry.filesize import size
 now = datetime.now()
 
 
-def upper_diagnostics():
-    """Function to calculate all 'upper' diagnostics."""
+class OverallOSInfo:
+    """A class to neatly grab the information about the overall OS."""
 
-    # processes
-    processes = list(psutil.process_iter())
+    def get_numProcesses(self) -> (int):
+        return len(list(psutil.process_iter()))
 
-    # load average
-    load_averages = psutil.getloadavg()
+    def get_loadAverages(self):
+        return psutil.getloadavg()
 
-    # cpu usage
-    cpu_usage = psutil.cpu_times()
-    overall_usage = cpu_usage[0] + cpu_usage[2] + cpu_usage[3]
+    def get_cpuUsage(self):
+        return psutil.cpu_times()
 
-    # cannot get shared libs due to Mac, showing other stats instead
-    cpu_count = psutil.cpu_count()
-    phys_cpus = psutil.cpu_count(logical=False)
+    def get_overallCPUUsage(self) -> (int):
+        cpu_usage = psutil.cpu_times()
+        overall = sum(cpu_usage)
+        return overall
 
-    # Cannot get memory regions due to having a Mac, showing other stats instead
-    numUsers = len(psutil.users())
-    bootTime = datetime.fromtimestamp(psutil.boot_time()).strftime("%Y-%m-%d %H:%M:%S")
+    def get_virtCPUCount(self) -> (int):
+        return psutil.cpu_count()
 
-    # physical memory
-    vm = psutil.virtual_memory()
+    def get_physCPUCount(self) -> (int):
+        return psutil.cpu_count(logical=False)
 
-    # VM
-    totalvm = psutil.virtual_memory().total
-    swap = psutil.swap_memory()
+    def get_numUsers(self) -> (int):
+        return len(psutil.users())
 
-    # Networks
-    network_info = psutil.net_io_counters()
+    def get_bootTime(self):
+        return datetime.fromtimestamp(psutil.boot_time()).strftime("%Y-%m-%d %H:%M:%S")
 
-    # Disks
-    disk_info = psutil.disk_io_counters()
+    def get_physMem(self):
+        return psutil.virtual_memory()
 
-    # return all of the metrics calculated in this function
-    return (
-        processes,
-        load_averages,
-        cpu_usage,
-        overall_usage,
-        cpu_count,
-        phys_cpus,
-        numUsers,
-        bootTime,
-        vm,
-        totalvm,
-        swap,
-        network_info,
-        disk_info,
-    )
+    def get_virtMem(self) -> (str):
+        return size(psutil.virtual_memory().total)
+
+    def get_swapMem(self):
+        return psutil.swap_memory()
+
+    def get_networkInfo(self):
+        return psutil.net_io_counters()
+
+    def get_diskInfo(self):
+        return psutil.disk_io_counters()
 
 
 def process_stats():
     """Function to calculate order of processes in top command."""
+
     # create process list and initializations of needed func variables
     processes = []
     sleeping = 0
     running = 0
     threads = 0
-    overallCPUPerc = 0
-
-    # calculate the overall CPU percentage
-    # over all processes psutil can grab
-    for process in psutil.process_iter():
-        try:
-            overallCPUPerc += psutil.Process(process.pid).memory_info()[0] / 2.0**30
-        except:
-            overallCPUPerc += 0
 
     # calculate various statistics over every process
     # psutil can grab
     for process in psutil.process_iter():
-        # PID
-        id = process.pid
-        # process name
-        name = process.name()
-        # CPU percent
-        proc = psutil.Process(id)
-        # status
-        status = process.status()
 
-        # get username that process is from
-        user = process.username()
+        name = ""
+        user = ""
+        status = ""
+        cpuPerc = 0
 
         try:
-            # try to calculate the memory usage
-            memoryUse = proc.memory_info()[0] / 2.0**30
+            # PID
+            id = process.pid
+
+            # try to calculate the CPU % usage
+            # sum up memory usage and divide for CPU %
+            proc = psutil.Process(id)
+            cpuPerc = (proc.memory_info()[0] / 2.0**30) * 100
+
+            # process name
+            name = process.name()
+
+            # status
+            status = process.status()
+
+            # get username that process is from
+            user = process.username()
+
         except:
-            memoryUse = 0
+            cpuPerc = 0
 
         if process.status() == "sleeping":
             # count process if it is sleeping
@@ -112,12 +106,8 @@ def process_stats():
         except:
             threads += 0
 
-        # sum up memory usage and divide for CPU %
-        cpuPerc = (memoryUse / overallCPUPerc) * 100
-
         # calculate the time that the process begin running
-        seconds = process.create_time()
-        start = datetime.fromtimestamp(seconds)
+        start = datetime.fromtimestamp(process.create_time())
 
         # get the current time
         current = datetime.now()
@@ -130,59 +120,64 @@ def process_stats():
         seconds = int(difference.total_seconds())
         minutes, seconds = divmod(seconds, 60)
         hours, minutes = divmod(minutes, 60)
+
         # concatenate together the calculated difference
         formatted_time = str(hours) + ":" + str(minutes) + ":" + str(seconds)
 
         # create a list in the list containing the calculated process info
         processes.append(
-            [id, name[:12], round(cpuPerc, 2), formatted_time, user, status]
+            [id, name[:12], round(cpuPerc, 2), formatted_time, user[:11], status]
         )
+
     # order the list in descending order of cpu percentage
     processes.sort(key=lambda processes: processes[2], reverse=True)
 
     # return calculated metrics
-    return processes, sleeping, running, threads
+    return processes, sleeping, running, threads, current
 
 
 def top():
     """Function to compile all diagnostic information into a organized display."""
-    # call needed function metrics
-    (
-        processes,
-        load_averages,
-        cpu_usage,
-        overall_usage,
-        cpu_count,
-        phys_cpus,
-        numUsers,
-        bootTime,
-        vm,
-        totalvm,
-        swap,
-        network_info,
-        disk_info,
-    ) = upper_diagnostics()
 
-    processes, sleeping, running, threads = process_stats()
+    os = OverallOSInfo()
 
-    # create now variable for accurate timekeeping
-    newnow = datetime.now()
+    processes, sleeping, running, threads, currentTime = process_stats()
 
     print(
-        f"Processes: {len(processes)} total, {running} running, {sleeping} sleeping, {threads} threads",
-        "{:>20}".format(newnow.strftime("%H:%M:%S")),
+        f"Processes: {os.get_numProcesses()} total, {running} running, {sleeping} sleeping, {threads} threads",
+        "{:>20}".format(currentTime.strftime("%H:%M:%S")),
     )
+
+    load_averages = os.get_loadAverages()
+    cpu_usage = os.get_cpuUsage()
+    overall_usage = os.get_overallCPUUsage()
+
     print(
         f"Load Avg: {round(load_averages[0], 2)}, {round(load_averages[1], 2)}, {round(load_averages[2], 2)}  CPU usage: {round((cpu_usage[0]/overall_usage) * 100, 2)}% user, {round((cpu_usage[2]/overall_usage) * 100,2)}% sys, {round((cpu_usage[3]/overall_usage) * 100,2)}% idle"
     )
+
     print(
-        f"CPU counts: {cpu_count} total, {phys_cpus} physical  Users: {numUsers}  Boot Time: {bootTime}"
+        f"CPU counts: {os.get_virtCPUCount()} total, {os.get_physCPUCount()} physical  Users: {os.get_numUsers()}  Boot Time: {os.get_bootTime()}"
     )
-    print(f"PhysMem: {size(vm[0])} used, {size(vm[7])} wired, {vm[5]} inactive.")
-    print(f"VM: {size(totalvm)} vsize, {swap[4]}(0) swapins, {swap[5]}(0) swapouts")
+
+    physmem = os.get_physMem()
+
+    print(
+        f"PhysMem: {os.get_virtMem()} used, {size(physmem[7])} wired, {physmem[5]} inactive."
+    )
+
+    swap = os.get_swapMem()
+
+    print(f"VM: {os.get_virtMem()} vsize, {swap[4]}(0) swapins, {swap[5]}(0) swapouts")
+
+    network_info = os.get_networkInfo()
+
     print(
         f"Networks: packets: {network_info[3]}/{size(network_info[3])} in, {network_info[2]}/{size(network_info[2])} out."
     )
+
+    disk_info = os.get_diskInfo()
+
     print(
         f"Disks: {disk_info[0]}/{size(disk_info[0])} read, {disk_info[1]}/{size(disk_info[1])} written"
     )
