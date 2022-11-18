@@ -26,6 +26,17 @@ class OverallOSInfo:
         overall = sum(cpu_usage)
         return overall
 
+    def get_overallCPUPerc(self):
+        # calculate overall CPU percentage
+        # over all processes psutil can grab
+        cpuPerc = 0
+        for process in psutil.process_iter():
+            try:
+                cpuPerc += psutil.Process(process.pid).memory_info()[0] / 2.0**30
+            except:
+                cpuPerc += 0
+        return cpuPerc
+
     def get_memRegions(self) -> (int):
         # only the rss is available through psutil on Windows
         p = psutil.Process()
@@ -61,6 +72,9 @@ def process_stats():
     running = 0
     threads = 0
 
+    os = OverallOSInfo()
+    overallCPUPerc = os.get_overallCPUPerc()
+
     # iterate through all processes and grab info for all
     for process in psutil.process_iter():
 
@@ -84,7 +98,7 @@ def process_stats():
 
             # calculate CPU perc
             proc = psutil.Process(id)
-            cpuPerc = (proc.memory_info()[0] / 2.0**30) * 100
+            cpuPerc = ((proc.memory_info()[0] / 2.0**30) / overallCPUPerc) * 100
 
         except:
             pass

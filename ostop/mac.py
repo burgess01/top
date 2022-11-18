@@ -21,6 +21,17 @@ class OverallOSInfo:
     def get_cpuUsage(self):
         return psutil.cpu_times()
 
+    def get_overallCPUPerc(self):
+        # calculate overall CPU percentage
+        # over all processes psutil can grab
+        cpuPerc = 0
+        for process in psutil.process_iter():
+            try:
+                cpuPerc += psutil.Process(process.pid).memory_info()[0] / 2.0**30
+            except:
+                cpuPerc += 0
+        return cpuPerc
+
     def get_overallCPUUsage(self) -> (int):
         cpu_usage = psutil.cpu_times()
         overall = sum(cpu_usage)
@@ -63,6 +74,9 @@ def process_stats():
     running = 0
     threads = 0
 
+    os = OverallOSInfo()
+    overallCPUPerc = os.get_overallCPUPerc()
+
     # calculate various statistics over every process
     # psutil can grab
     for process in psutil.process_iter():
@@ -79,7 +93,7 @@ def process_stats():
             # try to calculate the CPU % usage
             # sum up memory usage and divide for CPU %
             proc = psutil.Process(id)
-            cpuPerc = (proc.memory_info()[0] / 2.0**30) * 100
+            cpuPerc = ((proc.memory_info()[0] / 2.0**30) / overallCPUPerc) * 100
 
             # process name
             name = process.name()
