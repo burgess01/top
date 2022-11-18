@@ -102,3 +102,6 @@ setup: |
 # run the program using a single run
 - description: Run top for one iteration and ensure it does not crash.
   command: python ostop/main.py 1
+
+- description: Run top for two iterations and ensure it does not crash.
+  command: python ostop/main.py 2
