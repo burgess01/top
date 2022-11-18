@@ -1,7 +1,6 @@
 """ Program in order to create a 'top' command implemented in Python. """
 
 # needed imports
-import schedule
 import time
 import sys
 import platform
@@ -15,57 +14,28 @@ import linux
 def main():
 
     operatingSys = platform.system()
-
     if operatingSys == "Darwin":
-        if len(sys.argv) == 1:
-            try:
-                # if they want to run it iteratively
-                schedule.every(1).seconds.do(mac.top)
-                while True:
-                    schedule.run_pending()
-                    time.sleep(1)
-            except KeyboardInterrupt:
-                sys.exit(0)
-        else:
-            iterations = int(sys.argv[1])
-            # run for the amount of times entered
-            for i in range(iterations):
-                mac.top()
-                time.sleep(1)
-
+        os = compile("mac.top()", "mac", "eval")
     elif operatingSys == "Windows":
+        os = compile("windows.top()", "windows", "eval")
+    elif operatingSys == "Linux":
+        os = compile("linux.top()", "linux", "eval")
+
+    try:
         if len(sys.argv) == 1:
-            try:
-                # if they want to run it iteratively
-                schedule.every(1).seconds.do(windows.top)
-                while True:
-                    schedule.run_pending()
-                    time.sleep(1)
-            except KeyboardInterrupt:
-                sys.exit(0)
+            # if they want to run it iteratively
+            while True:
+                eval(os)
+                time.sleep(0.90)
         else:
             iterations = int(sys.argv[1])
             # run for the amount of times entered
             for i in range(iterations):
-                windows.top()
+                eval(os)
                 time.sleep(1)
 
-    elif operatingSys == "Linux":
-        if len(sys.argv) == 1:
-            try:
-                # if they want to run it iteratively
-                schedule.every(1).seconds.do(linux.top)
-                while True:
-                    schedule.run_pending()
-                    time.sleep(1)
-            except KeyboardInterrupt:
-                sys.exit(0)
-        else:
-            iterations = int(sys.argv[1])
-            # run for the amount of times entered
-            for i in range(iterations):
-                linux.top()
-                time.sleep(1)
+    except KeyboardInterrupt:
+        sys.exit(0)
 
 
 if __name__ == "__main__":
