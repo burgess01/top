@@ -9,57 +9,62 @@ from hurry.filesize import size
 now = datetime.now()
 
 
-def upper_diagnostics():
-    """This function calculates all 'upper' diagnostics"""
+class OverallOSInfo:
+    """A class to neatly grab the information about the overall OS."""
 
-    # load average
-    load_avg = psutil.getloadavg()
+    def get_numProcesses(self) -> (int):
+        return len(list(psutil.process_iter()))
 
-    # cpu usage:
-    # usage
-    cpu_usage = psutil.cpu_times()
-    # overall usage
-    overall_usage = cpu_usage[0] + cpu_usage[2] + cpu_usage[3]
+    def get_loadAverages(self):
+        return psutil.getloadavg()
 
-    # memory regions
-    p = psutil.Process()
-    mem = p.memory_maps()
+    def get_cpuUsage(self):
+        return psutil.cpu_times()
 
-    total_mem_regions = 0
-    rss_mem_regions = 0
-    private_mem_regions = 0
+    def get_overallCPUUsage(self) -> (int):
+        cpu_usage = psutil.cpu_times()
+        overall = sum(cpu_usage)
+        return overall
 
-    # iterate through all memory_map enteries and grab wanted values
-    for i in range(len(mem)):
-        total_mem_regions += mem[i][1]
-        rss_mem_regions += mem[i][2]
-        private_mem_regions += mem[i][3]
+    def get_overallCPUPerc(self):
+        # calculate overall CPU percentage
+        # over all processes psutil can grab
+        cpuPerc = 0
+        for process in psutil.process_iter():
+            try:
+                cpuPerc += psutil.Process(process.pid).memory_info()[0] / 2.0**30
+            except:
+                cpuPerc += 0
+        return cpuPerc
 
-    # VM
-    vm = psutil.virtual_memory()
+    def get_memRegions(self):
+        # only the rss is available through psutil on Windows
+        p = psutil.Process()
+        mem = p.memory_maps()
 
-    # swap memory
-    swap = psutil.swap_memory()
+        total_mem_regions = 0
+        rss_mem_regions = 0
+        private_mem_regions = 0
 
-    # networks
-    network_info = psutil.net_io_counters()
+        # iterate through all memory_map enteries and grab wanted values
+        for i in range(len(mem)):
+            total_mem_regions += mem[i][1]
+            rss_mem_regions += mem[i][2]
+            private_mem_regions += mem[i][3]
 
-    # disks
-    disk_info = psutil.disk_io_counters()
+        return total_mem_regions, rss_mem_regions, private_mem_regions
 
-    # return all metrics calculated
-    return (
-        load_avg,
-        cpu_usage,
-        overall_usage,
-        total_mem_regions,
-        rss_mem_regions,
-        private_mem_regions,
-        vm,
-        swap,
-        network_info,
-        disk_info,
-    )
+    def get_virtMem(self):
+        return psutil.virtual_memory()
+
+    def get_swapMem(self):
+        return psutil.swap_memory()
+
+    def get_networkInfo(self):
+        return psutil.net_io_counters()
+
+    def get_diskInfo(self):
+        return psutil.disk_io_counters()
 
 
 def process_stats():
@@ -69,43 +74,36 @@ def process_stats():
     processes = []
     sleeping = 0
     running = 0
-    totalproc = 0
     threads = 0
-    overallCPUPerc = 0
 
-    # get total processes number
-    totalproc = len(list(psutil.process_iter()))
-
-    # calculate overall CPU percentage
-    # over all processes psutil can grab
-    for process in psutil.process_iter():
-        try:
-            overallCPUPerc += psutil.Process(process.pid).memory_info()[0] / 2.0**30
-        except:
-            overallCPUPerc += 0
+    os = OverallOSInfo()
+    overallCPUPerc = os.get_overallCPUPerc()
 
     # iterate through all processes and grab info for all
     for process in psutil.process_iter():
-        memoryUse = 0
+
+        name = ""
+        user = ""
+        status = ""
         cpuPerc = 0
 
-        # pid
-        id = process.pid
-
-        # process name
-        name = process.name()
-
-        # status
-        status = process.status()
-
-        # username
-        user = process.username()
-
-        # calculate CPU perc
         try:
+            # pid
+            id = process.pid
+
+            # process name
+            name = process.name()
+
+            # status
+            status = process.status()
+
+            # username
+            user = process.username()
+
+            # calculate CPU perc
             proc = psutil.Process(id)
-            memoryUse = proc.memory_info()[0] / 2.0**30
-            cpuPerc = (memoryUse / overallCPUPerc) * 100
+            cpuPerc = ((proc.memory_info()[0] / 2.0**30) / overallCPUPerc) * 100
+
         except:
             pass
 
@@ -134,6 +132,7 @@ def process_stats():
         seconds = int(difference.total_seconds())
         minutes, seconds = divmod(seconds, 60)
         hours, minutes = divmod(minutes, 60)
+
         # concatenate together the calculated difference
         formatted_time = str(hours) + ":" + str(minutes) + ":" + str(seconds)
 
@@ -147,42 +146,42 @@ def process_stats():
     processes.sort(key=lambda processes: processes[2], reverse=True)
 
     # return list and other metrics
-    return processes, totalproc, sleeping, running, threads
+    return processes, sleeping, running, threads, current
 
 
 def top():
     """This function compiles all diagnostic info and prints it to the terminal"""
 
-    updatedTime = datetime.now()
+    os = OverallOSInfo()
 
-    (
-        load_avg,
-        cpu_usage,
-        overall_usage,
-        total_mem_regions,
-        rss_mem_regions,
-        private_mem_regions,
-        vm,
-        swap,
-        network_info,
-        disk_info,
-    ) = upper_diagnostics()
-
-    processes, totalproc, sleeping, running, threads = process_stats()
+    processes, sleeping, running, threads, currentTime = process_stats()
 
     print(
-        f"Processes: {totalproc} total, {running} running, {sleeping} sleeping, {threads} threads",
-        "{:>20}".format(updatedTime.strftime("%H:%M:%S")),
+        f"Processes: {os.get_numProcesses()} total, {running} running, {sleeping} sleeping, {threads} threads",
+        "{:>20}".format(currentTime.strftime("%H:%M:%S")),
     )
+
+    load_avg = os.get_loadAverages()
+    cpu_usage = os.get_cpuUsage()
+    overall_usage = os.get_overallCPUUsage()
     print(
         f"Load Avg: {round(load_avg[0], 2)}, {round(load_avg[1], 2)}, {round(load_avg[2], 2)}  CPU usage: {round((cpu_usage[0]/overall_usage) * 100, 2)}% user, {round((cpu_usage[2]/overall_usage) * 100,2)}% sys, {round((cpu_usage[3]/overall_usage) * 100,2)}% idle"
     )
+
+    total_mem_regions, rss_mem_regions, private_mem_regions = os.get_memRegions()
     print(
         f"MemRegions: {total_mem_regions} total, {rss_mem_regions} resident, {private_mem_regions} private"
     )
+
+    vm = os.get_virtMem()
+    swap = os.get_swapMem()
     print(f"PhysMem: {size(vm[0])} total, {size(vm[1])} available")
     print(f"VM: {size(vm[0])} vsize, {swap[4]}(0) swapins, {swap[5]}(0) swapouts")
+
+    network_info = os.get_networkInfo()
     print(f"Networks: packets: {network_info[2]} in, {network_info[3]} out")
+
+    disk_info = os.get_diskInfo()
     print(f"Disks: {disk_info[0]} read, {disk_info[1]} written")
 
     # lower section print
