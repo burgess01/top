@@ -9,7 +9,6 @@ repository = "https://github.com/burgess01/top"
 
 [tool.poetry.dependencies]
 python = "^3.7.2"
-schedule = "^1.1.0"
 psutil = "^5.9.3"
 datetime = "^4.7"
 hurry-filesize = "^0.9"

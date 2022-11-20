@@ -5,12 +5,12 @@ setup: |
 
 # check the main file
 - ostop/main.py:
-    - description: Use the schedule library
+    - description: Use eval to run the correct OS file
       check: MatchFileFragment
       options:
-        fragment: import schedule
+        fragment: eval(
         count: 1
-        exact: true
+        exact: false
     - description: Check the os using platform.system()
       check: MatchFileFragment
       options:
