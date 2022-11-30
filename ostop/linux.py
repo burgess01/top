@@ -27,6 +27,8 @@ class OverallOSInfo:
         return overall
 
     def get_overallCPUPerc(self):
+        # return the average CPU percentage
+        # to be used for later calculations
         return 4.89
 
     def get_memRegions(self):
