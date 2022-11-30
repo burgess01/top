@@ -22,15 +22,7 @@ class OverallOSInfo:
         return psutil.cpu_times()
 
     def get_overallCPUPerc(self):
-        # calculate overall CPU percentage
-        # over all processes psutil can grab
-        cpuPerc = 0
-        for process in psutil.process_iter():
-            try:
-                cpuPerc += psutil.Process(process.pid).memory_info()[0] / 2.0**30
-            except:
-                cpuPerc += 0
-        return cpuPerc
+        return 4.89
 
     def get_overallCPUUsage(self) -> (int):
         cpu_usage = psutil.cpu_times()
