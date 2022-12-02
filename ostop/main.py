@@ -6,20 +6,20 @@ import sys
 import platform
 
 # needed cross platform files
-import mac
-import windows
-import linux
+from ostop.mac import mactop
+from ostop.windows import windowstop
+from ostop.linux import linuxtop
 
 
 def main():
 
     operatingSys = platform.system()
     if operatingSys == "Darwin":
-        os = compile("mac.top()", "mac", "eval")
+        os = compile("mactop()", "mac", "eval")
     elif operatingSys == "Windows":
-        os = compile("windows.top()", "windows", "eval")
+        os = compile("windowstop()", "windows", "eval")
     elif operatingSys == "Linux":
-        os = compile("linux.top()", "linux", "eval")
+        os = compile("linuxtop()", "linux", "eval")
 
     try:
         if len(sys.argv) == 1:

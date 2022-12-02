@@ -139,7 +139,7 @@ def process_stats():
     return processes, sleeping, running, threads, current
 
 
-def top():
+def windowstop():
     """This function compiles all diagnostic info and prints it to the terminal"""
 
     os = OverallOSInfo()

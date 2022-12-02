@@ -144,7 +144,7 @@ def process_stats():
     return processes, sleeping, running, threads, current
 
 
-def top():
+def mactop():
     """Function to compile all diagnostic information into a organized display."""
 
     os = OverallOSInfo()
