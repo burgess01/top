@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ostop"
-version = "1.4.1"
+version = "1.5"
 description = "Cross-Compatible Python implementation of top command."
 license = "MIT"
 authors = ["Katherine Burgess <20burgessk@gmail.com>"]
