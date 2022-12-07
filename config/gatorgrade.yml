@@ -4,7 +4,7 @@ setup: |
 ---
 
 name: |
-  top
+  command line
 ---
 
 # check the main file
