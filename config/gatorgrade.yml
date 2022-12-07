@@ -3,7 +3,9 @@ setup: |
   echo "installed all dependencies."
 ---
 
-name: top
+name: |
+  top
+---
 
 # check the main file
 - ostop/main.py:
