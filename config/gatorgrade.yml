@@ -3,6 +3,8 @@ setup: |
   echo "installed all dependencies."
 ---
 
+name: top
+
 # check the main file
 - ostop/main.py:
     - description: Use eval to run the correct OS file
