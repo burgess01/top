@@ -28,9 +28,8 @@ def main():
                 eval(os)
                 time.sleep(0.90)
         else:
-            iterations = int(sys.argv[1])
             # run for the amount of times entered
-            for i in range(iterations):
+            for i in range(int(sys.argv[1])):
                 eval(os)
                 time.sleep(1)
 
